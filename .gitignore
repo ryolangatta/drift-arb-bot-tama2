@@ -40,3 +40,5 @@ htmlcov/
 !data/logs/.gitkeep
 !data/audit/.gitkeep
 !data/backups/.gitkeep
+
+echo "test_env/" >> .gitignore
