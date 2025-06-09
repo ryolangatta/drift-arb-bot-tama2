@@ -1,0 +1,167 @@
+Metadata-Version: 2.1
+Name: driftpy
+Version: 0.8.56
+Summary: A Python client for the Drift DEX
+Home-page: https://github.com/drift-labs/driftpy
+License: MIT
+Author: x19
+Author-email: https://twitter.com/0xNineteen@gmail.com
+Requires-Python: >=3.10,<4.0
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Dist: aiodns (==3.0.0)
+Requires-Dist: aiohttp (>=3.9.1,<4.0.0)
+Requires-Dist: aiosignal (==1.3.1)
+Requires-Dist: anchorpy (==0.21.0)
+Requires-Dist: anchorpy-core (==0.2.0)
+Requires-Dist: anyio (==4.4.0)
+Requires-Dist: apischema (==0.17.5)
+Requires-Dist: async-timeout (>=4.0.2,<5.0.0)
+Requires-Dist: attrs (==22.2.0)
+Requires-Dist: backoff (==2.2.1)
+Requires-Dist: base58 (==2.1.1)
+Requires-Dist: based58 (==0.1.1)
+Requires-Dist: borsh-construct (==0.1.0)
+Requires-Dist: cachetools (==5.3)
+Requires-Dist: certifi (==2022.12.7)
+Requires-Dist: cffi (==1.15.1)
+Requires-Dist: charset-normalizer (==2.1.1)
+Requires-Dist: construct (==2.10.68)
+Requires-Dist: construct-typing (==0.5.3)
+Requires-Dist: deprecated (>=1.2.14,<2.0.0)
+Requires-Dist: dnspython (==2.2.1)
+Requires-Dist: events (>=0.5,<0.6)
+Requires-Dist: exceptiongroup (==1.0.4)
+Requires-Dist: grpcio (==1.68.1)
+Requires-Dist: h11 (==0.14.0)
+Requires-Dist: httpcore (==1.0.7)
+Requires-Dist: httpx (==0.28.1)
+Requires-Dist: idna (==3.4)
+Requires-Dist: iniconfig (==1.1.1)
+Requires-Dist: jsonalias (==0.1.1)
+Requires-Dist: jsonrpcclient (==4.0.3)
+Requires-Dist: jsonrpcserver (==5.0.9)
+Requires-Dist: jsonschema (==4.18.0)
+Requires-Dist: loguru (>=0.7.0,<0.8.0)
+Requires-Dist: mccabe (==0.7.0)
+Requires-Dist: more-itertools (==8.14.0)
+Requires-Dist: numpy (>=1.26.2,<2.0.0)
+Requires-Dist: oslash (==0.6.3)
+Requires-Dist: packaging (==23.1)
+Requires-Dist: protobuf (==5.29.2)
+Requires-Dist: psutil (==5.9.4)
+Requires-Dist: py (==1.11.0)
+Requires-Dist: pycares (==4.3.0)
+Requires-Dist: pycodestyle (==2.10.0)
+Requires-Dist: pycparser (==2.21)
+Requires-Dist: pyflakes (==3.0.1)
+Requires-Dist: pyheck (==0.1.5)
+Requires-Dist: pynacl (>=1.5.0,<2.0.0)
+Requires-Dist: pyrsistent (==0.19.2)
+Requires-Dist: pythclient (==0.2.1)
+Requires-Dist: requests (>=2.28.1,<3.0.0)
+Requires-Dist: rfc3986 (==1.5.0)
+Requires-Dist: sniffio (==1.3.0)
+Requires-Dist: solana (>=0.36,<0.37)
+Requires-Dist: solders (>=0.23.0,<0.27.0)
+Requires-Dist: sumtypes (==0.1a6)
+Requires-Dist: toml (==0.10.2)
+Requires-Dist: tomli (==2.0.1)
+Requires-Dist: toolz (==0.11.2)
+Requires-Dist: tqdm (>=4.67.1,<5.0.0)
+Requires-Dist: types-cachetools (==4.2.10)
+Requires-Dist: typing-extensions (>=4.4.0,<5.0.0)
+Requires-Dist: urllib3 (==1.26.13)
+Requires-Dist: websockets (==13.0)
+Requires-Dist: yarl (==1.9.4)
+Requires-Dist: zstandard (==0.18.0)
+Project-URL: Documentation, https://drift-labs.github.io/driftpy/
+Description-Content-Type: text/markdown
+
+# DriftPy
+
+<div align="center">
+    <img src="docs/img/drift.png" width="30%" height="30%">
+</div>
+
+DriftPy is the Python client for the [Drift](https://www.drift.trade/) protocol.
+It allows you to trade and fetch data from Drift using Python.
+
+**[Read the full SDK documentation here!](https://drift-labs.github.io/v2-teacher/)**
+
+## Installation
+
+```
+pip install driftpy
+```
+
+Note: requires Python >= 3.10.
+
+
+## SDK Examples
+
+- `examples/` folder includes more examples of how to use the SDK including how to provide liquidity/become an lp, stake in the insurance fund, etc.
+
+
+## Note on using QuickNode
+
+If you are using QuickNode free plan, you *must* use `AccountSubscriptionConfig("demo")`, and you can only subscribe to 1 perp market and 1 spot market at a time.
+
+Non-QuickNode free RPCs (including the public mainnet-beta url) can use `cached` as well.
+
+Example setup for `AccountSubscriptionConfig("demo")`: 
+
+```python
+    # This example will listen to perp markets 0 & 1 and spot market 0
+    # If you are listening to any perp markets, you must listen to spot market 0 or the SDK will break
+
+    perp_markets = [0, 1]
+    spot_market_oracle_infos, perp_market_oracle_infos, spot_market_indexes = get_markets_and_oracles(perp_markets = perp_markets)
+
+    oracle_infos = spot_market_oracle_infos + perp_market_oracle_infos
+
+    drift_client = DriftClient(
+        connection,
+        wallet, 
+        "mainnet",             
+        perp_market_indexes = perp_markets,
+        spot_market_indexes = spot_market_indexes,
+        oracle_infos = oracle_infos,
+        account_subscription = AccountSubscriptionConfig("demo"),
+    )
+    await drift_client.subscribe()
+```
+If you intend to use `AccountSubscriptionConfig("demo)`, you *must* call `get_markets_and_oracles` to get the information you need.
+
+`get_markets_and_oracles` will return all the necessary `OracleInfo`s and `market_indexes` in order to use the SDK.
+
+# Development
+
+## Setting Up Dev Env
+
+`bash setup.sh`
+
+
+Ensure correct python version (using pyenv is recommended):
+```bash
+pyenv install 3.10.11
+pyenv global 3.10.11
+poetry env use $(pyenv which python)
+```
+
+Install dependencies:
+```bash
+poetry install
+```
+
+To run tests, first ensure you have set up the RPC url, then run `pytest`:
+```bash
+export MAINNET_RPC_ENDPOINT="<YOUR_RPC_URL>"
+export DEVNET_RPC_ENDPOINT="https://api.devnet.solana.com" # or your own RPC
+
+poetry run pytest -v -s -x tests/ci/*.py
+poetry run pytest -v -s tests/math/*.py
+```
+

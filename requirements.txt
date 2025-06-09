@@ -1,24 +1,15 @@
-# Core
-python-dotenv
-discord-webhook
-aiohttp
-pandas
-numpy
-SQLAlchemy
-python-json-logger
-apscheduler
-matplotlib
+# Core - keep your working versions
+python-dotenv==1.0.0
+discord-webhook==1.3.0
+pandas==2.1.4
+numpy==1.26.4
+matplotlib==3.7.1
 
 # Exchanges
-python-binance
-websocket-client
+python-binance==1.0.19
 
-# Solana & Drift
-solana
-solders
-anchorpy
-base58
+# Drift SDK - just let pip resolve
 driftpy
 
 # Analysis
-pandas-ta
+pandas-ta==0.3.14b0
